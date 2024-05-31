@@ -107,6 +107,63 @@ void inorder(struct TBTNode *head)
         }
     }
 }
+
+
+struct TBTNode* findParent(struct TBTNode* p) {
+   struct TBTNode* child = p;
+
+   while (p->rbit == 1) p = p->right;
+   p = p->right;
+
+   if (p->left == child)
+       return p;
+
+   p = p->left;
+   while (p->right != child) {
+       p = p->right;
+   }
+   return p;
+}
+
+
+struct TBTNode* postSuccessor(struct TBTNode* p) {
+   struct TBTNode* cur = p;
+   struct TBTNode* parent = findParent(cur);
+
+   if (parent->right == cur) return parent;
+   else {
+       while (p->rbit == 1) p = p->right;
+       p = p->right;
+
+       if (p->rbit == 1) {
+           p = p->right;
+           while (!(p->rbit == 0 && p->lbit == 0)) {
+               if (p->lbit == 1) p = p->left;
+               else if (p->rbit == 1) p = p->right;
+           }
+       }
+   }
+   return p;
+}
+
+// postorder traversal
+void postorder(struct TBTNode* head) {
+   struct TBTNode* p = head->left;
+   struct TBTNode* temp = p;
+   while (!(p->rbit == 0 && p->lbit == 0)) {
+       if (p->lbit == 1) {
+           p = p->left;
+       }
+       else if (p->rbit == 1) p = p->right;
+   }
+   printf("%d  ", p->data);
+
+   while (p != head->left) {
+       p = postSuccessor(p);
+       printf("%d  ", p->data);
+   }
+}
+
 int main()
 {
 	struct TBTNode *head = NULL;
@@ -138,62 +195,3 @@ int main()
 	free(head);
 	return 0;
 }
-
-
-
-//struct TBTNode* findParent(struct TBTNode* p) {
-//    struct TBTNode* child = p;
-//
-//    while (p->rbit == 1) p = p->right;
-//    p = p->right;
-//
-//    if (p->left == child)
-//        return p;
-//
-//    p = p->left;
-//    while (p->right != child) {
-//        p = p->right;
-//    }
-//    return p;
-//}
-//
-//
-//struct TBTNode* postSuccessor(struct TBTNode* p) {
-//    struct TBTNode* cur = p;
-//    struct TBTNode* parent = findParent(cur);
-//
-//    if (parent->right == cur) return parent;
-//    else {
-//        while (p->rbit == 1) p = p->right;
-//        p = p->right;
-//
-//        if (p->rbit == 1) {
-//            p = p->right;
-//            while (!(p->rbit == 0 && p->lbit == 0)) {
-//                if (p->lbit == 1) p = p->left;
-//                else if (p->rbit == 1) p = p->right;
-//            }
-//        }
-//    }
-//    return p;
-//}
-//
-//// postorder traversal
-//void postorder(struct TBTNode* head) {
-//    struct TBTNode* p = head->left;
-//    struct TBTNode* temp = p;
-//    while (!(p->rbit == 0 && p->lbit == 0)) {
-//        if (p->lbit == 1) {
-//            p = p->left;
-//        }
-//        else if (p->rbit == 1) p = p->right;
-//    }
-//    printf("%d  ", p->data);
-//
-//    while (p != head->left) {
-//        p = postSuccessor(p);
-//        printf("%d  ", p->data);
-//    }
-//}
-
-
